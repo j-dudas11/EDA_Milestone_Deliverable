@@ -8,9 +8,6 @@ This assignment covers exercises 10.3.3 and 10.4.1 from Chapter 10 of R for Data
 "Exploratory Data Analysis with R — Milestone Deliverable"
 author: "Jacob Dudas"
 date: "November 13, 2026"
-output:
-  github_document:
-    pandoc_args: ["--wrap=none"]
 ---
 
 **Course:** DS 201 — Principles of Data Science  
