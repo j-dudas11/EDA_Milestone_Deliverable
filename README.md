@@ -6,8 +6,8 @@ This assignment covers exercises 10.3.3 and 10.4.1 from Chapter 10 of R for Data
 
 ---
 Exploratory Data Analysis with R — Milestone Deliverable
-Jacob Dudas
-November 13, 2026
+ - Jacob Dudas
+; November 13, 2026
 ---
 
 **Course:** DS 201 — Principles of Data Science  
