@@ -5,7 +5,7 @@
 This assignment covers exercises 10.3.3 and 10.4.1 from Chapter 10 of R for Data Science.
 
 ---
-title: "Exploratory Data Analysis with R — Milestone Deliverable"
+"Exploratory Data Analysis with R — Milestone Deliverable"
 author: "Jacob Dudas"
 date: "November 13, 2026"
 output:
