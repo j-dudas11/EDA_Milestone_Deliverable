@@ -1,15 +1,14 @@
 
 # Exploratory Data Analysis with R — Milestone Deliverable
 
-**Jacob Dudas | November 13, 2026**
-
-**Course:** DS 201 — Principles of Data Science  
-**Reading:** [R for Data Science (2nd edition), Chapter 10](https://r4ds.hadley.nz/EDA.html)  
-**Assigned sections:** 10.3.3 (Questions 1–4) and 10.4.1 (Questions 1–3)
-
-For this assignment, I used R to answer the seven questions and included graphs to support my answers. The full R code is available in [EDA_R.Rmd](EDA_R.Rmd).
-
 ---
+title: "EDA Milestone Deliverable"
+output:
+github_document:
+pandoc_args: ["--wrap=none"]
+always_allow_html: true
+---
+
 
 ## 10.3.3 Exercises — Variation (4 Questions)
 
