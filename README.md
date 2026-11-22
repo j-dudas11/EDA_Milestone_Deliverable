@@ -5,9 +5,11 @@
 This assignment covers exercises 10.3.3 and 10.4.1 from Chapter 10 of R for Data Science.
 
 ---
-Exploratory Data Analysis with R — Milestone Deliverable
- - Jacob Dudas
-; November 13, 2026
+title: "EDA Milestone Deliverable"
+output:
+github_document:
+pandoc_args: ["--wrap=none"]
+always_allow_html: true
 ---
 
 **Course:** DS 201 — Principles of Data Science  
@@ -16,23 +18,13 @@ Exploratory Data Analysis with R — Milestone Deliverable
 
 For this assignment, I used R to answer the seven questions and included code and graphs to support my answers.
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(
-  echo = TRUE,
-  message = FALSE,
-  warning = FALSE,
-  fig.width = 8,
-  fig.height = 4.5,
-  fig.align = "center"
-)
-```
-
-```{r packages}
+```r
 library(tidyverse)
 library(nycflights13)
 
 theme_set(theme_minimal(base_size = 12))
 ```
+
 
 ## 10.3.3 Exercises — Variation (4 Questions)
 
@@ -42,7 +34,7 @@ theme_set(theme_minimal(base_size = 12))
 
 I compared the three measurements and checked for unusual values.
 
-```{r q1033-1-summary}
+```r
 diamonds |>
   select(x, y, z) |>
   pivot_longer(everything(), names_to = "dimension", values_to = "mm") |>
@@ -58,7 +50,15 @@ diamonds |>
   knitr::kable(digits = 2, caption = "Diamond dimensions and potential outliers")
 ```
 
-```{r q1033-1-full-distributions, fig.height=7}
+
+| dimension | min_mm | median_mm | max_mm | number_equal_to_zero | number_over_20_mm |
+|---|---|---|---|---|---|
+| x | 0.00 | 5.70 | 10.74 | 8 | 0 |
+| y | 0.00 | 5.71 | 58.90 | 7 | 2 |
+| z | 0.00 | 3.53 | 31.80 | 20 | 1 |
+
+
+```r
 diamonds |>
   pivot_longer(cols = c(x, y, z),
                names_to = "dimension", values_to = "mm") |>
@@ -69,9 +69,12 @@ diamonds |>
        x = "Dimension in millimeters", y = "Number of diamonds")
 ```
 
+![Distributions of diamond dimensions](README_files/figure-gfm/q1033-1-full-distributions.png)
+
+
 I also zoomed in to get a better look at the main group of measurements.
 
-```{r q1033-1-zoomed-distributions, fig.height=7}
+```r
 diamonds |>
   pivot_longer(cols = c(x, y, z),
                names_to = "dimension", values_to = "mm") |>
@@ -83,6 +86,9 @@ diamonds |>
        x = "Dimension in millimeters", y = "Number of diamonds")
 ```
 
+![Diamond dimensions zoomed in](README_files/figure-gfm/q1033-1-zoomed-distributions.png)
+
+
 **Answer:** Based on the histograms, `x` and `y` have very similar measurements, while `z` is generally smaller. This makes sense because `x` and `y` represent the length and width, while `z` measures the depth of a diamond. I also found some measurements of zero and a few unusually large values, which likely indicate errors in the data.
 
 ### 10.3.3 — Question 2: Distribution of `price`
@@ -91,21 +97,27 @@ diamonds |>
 
 I tried different bin widths to see how the price distribution changes.
 
-```{r q1033-2-wide}
+```r
 ggplot(diamonds, aes(x = price)) +
   geom_histogram(binwidth = 1000, boundary = 0) +
   labs(title = "Diamond prices, $1,000 bins",
        x = "Price (USD)", y = "Number of diamonds")
 ```
 
-```{r q1033-2-medium}
+![Diamond prices, 1000 dollar bins](README_files/figure-gfm/q1033-2-wide.png)
+
+
+```r
 ggplot(diamonds, aes(x = price)) +
   geom_histogram(binwidth = 100, boundary = 0) +
   labs(title = "Diamond prices, $100 bins",
        x = "Price (USD)", y = "Number of diamonds")
 ```
 
-```{r q1033-2-fine}
+![Diamond prices, 100 dollar bins](README_files/figure-gfm/q1033-2-medium.png)
+
+
+```r
 ggplot(diamonds, aes(x = price)) +
   geom_histogram(binwidth = 5, boundary = 0) +
   coord_cartesian(xlim = c(1400, 1600)) +
@@ -113,9 +125,12 @@ ggplot(diamonds, aes(x = price)) +
        x = "Price (USD)", y = "Number of diamonds")
 ```
 
+![Diamond prices near 1500 dollars, 5 dollar bins](README_files/figure-gfm/q1033-2-fine.png)
+
+
 I also checked the prices in the gap.
 
-```{r q1033-2-counts}
+```r
 diamonds |>
   summarise(
     minimum_price = min(price),
@@ -126,20 +141,33 @@ diamonds |>
   knitr::kable(caption = "Price distribution and the gap around $1,500")
 ```
 
+
+| minimum_price | median_price | maximum_price | priced_1455_through_1545 |
+|---|---|---|---|
+| 326 | 2401 | 18823 | 0 |
+
+
 **Answer:** Most diamonds are priced on the lower end, with fewer diamonds at higher prices. When I used smaller bin widths, I noticed there were no diamonds priced between $1,455 and $1,545. This shows how changing the bin width can reveal patterns that are harder to see with larger bins.
 
 ### 10.3.3 — Question 3: 0.99 carat versus 1.00 carat
 
 **Question:** How many diamonds are 0.99 carat? How many are 1 carat? What do you think causes the difference?
 
-```{r q1033-3-counts}
+```r
 diamonds |>
   filter(carat %in% c(0.99, 1.00)) |>
   count(carat, name = "number_of_diamonds") |>
   knitr::kable(caption = "Exact counts at 0.99 and 1.00 carats")
 ```
 
-```{r q1033-3-plot}
+
+| carat | number_of_diamonds |
+|---|---|
+| 0.99 | 23 |
+| 1.00 | 1558 |
+
+
+```r
 diamonds |>
   filter(carat >= 0.90, carat <= 1.10) |>
   count(carat) |>
@@ -150,6 +178,9 @@ diamonds |>
        x = "Carat", y = "Number of diamonds")
 ```
 
+![Diamond counts near 1 carat](README_files/figure-gfm/q1033-3-plot.png)
+
+
 **Answer:** There are **23 diamonds at 0.99 carat** compared with **1,558 at 1.00 carat**. I think this is because 1 carat is an important selling point, so diamond cutters may try to keep the weight at or above that amount. However, the data alone cannot confirm this.
 
 ### 10.3.3 — Question 4: `coord_cartesian()` versus `xlim()` and `ylim()`
@@ -158,7 +189,7 @@ diamonds |>
 
 First, I compared the zooming methods using the same bin width.
 
-```{r q1033-4-fixed-coord}
+```r
 price_hist <- ggplot(diamonds, aes(x = price)) +
   geom_histogram(binwidth = 500, boundary = 0) +
   labs(x = "Price (USD)", y = "Number of diamonds")
@@ -168,15 +199,21 @@ price_hist +
   labs(title = "coord_cartesian(): portions of original bars remain visible")
 ```
 
-```{r q1033-4-fixed-xlim}
+![Zoomed price histogram with coord_cartesian](README_files/figure-gfm/q1033-4-fixed-coord.png)
+
+
+```r
 price_hist +
   xlim(1150, 1650) +
   labs(title = "xlim(): data outside the specified range are removed")
 ```
 
+![Price histogram with xlim](README_files/figure-gfm/q1033-4-fixed-xlim.png)
+
+
 Next, I compared them without setting a bin width.
 
-```{r q1033-4-auto-coord}
+```r
 auto_hist <- ggplot(diamonds, aes(x = price)) +
   geom_histogram() +
   labs(x = "Price (USD)", y = "Number of diamonds")
@@ -186,15 +223,21 @@ auto_hist +
   labs(title = "Automatic bins with coord_cartesian()")
 ```
 
-```{r q1033-4-auto-xlim}
+![Automatic bins with coord_cartesian](README_files/figure-gfm/q1033-4-auto-coord.png)
+
+
+```r
 auto_hist +
   xlim(1000, 5000) +
   labs(title = "Automatic bins with xlim()")
 ```
 
+![Automatic bins with xlim](README_files/figure-gfm/q1033-4-auto-xlim.png)
+
+
 Finally, I compared what happens when zooming in on the y-axis.
 
-```{r q1033-4-y-coord}
+```r
 carat_hist <- ggplot(diamonds, aes(x = carat)) +
   geom_histogram(binwidth = 0.10, boundary = 0) +
   labs(x = "Carat", y = "Number of diamonds")
@@ -204,11 +247,17 @@ carat_hist +
   labs(title = "coord_cartesian(): tall bars are visually clipped")
 ```
 
-```{r q1033-4-y-ylim}
+![Y-axis clipped with coord_cartesian](README_files/figure-gfm/q1033-4-y-coord.png)
+
+
+```r
 carat_hist +
   ylim(0, 500) +
   labs(title = "ylim(): bars outside the y-scale may disappear")
 ```
+
+![Histogram with ylim](README_files/figure-gfm/q1033-4-y-ylim.png)
+
 
 **Answer:** `coord_cartesian()` zooms in without removing any data, while `xlim()` and `ylim()` can remove observations or bars outside their limits. If I do not set `binwidth`, R automatically uses 30 bins, and using `xlim()` can change how those bins are calculated. If the zoom cuts through a bar, `coord_cartesian()` shows only the visible part of it. Therefore, I would use `coord_cartesian()` to zoom in without changing the original histogram.
 
@@ -220,7 +269,7 @@ carat_hist +
 
 I used a small example with missing values to compare the graphs.
 
-```{r q1041-1-data}
+```r
 example_data <- tibble(
   measurement = c(1, 2, 2, 3, NA_real_),
   category = c("A", "B", "A", NA_character_, "B")
@@ -234,14 +283,31 @@ example_data |>
 example_data |> count(category)
 ```
 
-```{r q1041-1-histogram}
+
+| missing_measurements | missing_categories |
+|---|---|
+| 1 | 1 |
+
+
+
+| category | n |
+|---|---|
+| A | 2 |
+| B | 2 |
+| NA | 1 |
+
+
+```r
 ggplot(example_data, aes(x = measurement)) +
   geom_histogram(binwidth = 1, boundary = 0, na.rm = TRUE) +
   labs(title = "Histogram: missing numerical values are omitted",
        x = "Measurement", y = "Count")
 ```
 
-```{r q1041-1-bar-chart}
+![Histogram with missing values omitted](README_files/figure-gfm/q1041-1-histogram.png)
+
+
+```r
 ggplot(example_data, aes(x = category)) +
   geom_bar() +
   scale_x_discrete(na.translate = TRUE) +
@@ -249,13 +315,16 @@ ggplot(example_data, aes(x = category)) +
        x = "Category", y = "Count")
 ```
 
+![Bar chart with missing category](README_files/figure-gfm/q1041-1-bar-chart.png)
+
+
 **Answer:** Histograms leave out missing values because an `NA` cannot be placed into a numerical range. Bar charts can show missing values as their own `NA` category. This is because histograms group numerical values into intervals, while bar charts count categories.
 
 ### 10.4.1 — Question 2: `na.rm = TRUE` in `mean()` and `sum()`
 
 **Question:** What does `na.rm = TRUE` do in `mean()` and `sum()`?
 
-```{r q1041-2-na-rm}
+```r
 values <- c(2, 4, NA, 8)
 
 mean(values)                 # Returns NA
@@ -265,6 +334,10 @@ sum(values)                  # Returns NA
 sum(values, na.rm = TRUE)    # 2 + 4 + 8 = 14
 ```
 
+
+**R output:** `NA`, `4.666667`, `NA`, `14`
+
+
 **Answer:** Using `na.rm = TRUE` tells R to ignore missing values when calculating a mean or sum. Without it, both functions return `NA` in this example. When I use it, the mean is about **4.67** and the sum is **14**.
 
 ### 10.4.1 — Question 3: Scheduled departure times and cancelled flights
@@ -273,7 +346,7 @@ sum(values, na.rm = TRUE)    # 2 + 4 + 8 = 14
 
 I converted the scheduled departure times to hours and labeled flights with missing departure times as cancelled.
 
-```{r q1041-3-prepare-flights}
+```r
 flights_eda <- nycflights13::flights |>
   mutate(
     cancelled = is.na(dep_time),
@@ -288,9 +361,10 @@ flights_eda |>
   knitr::kable(caption = "Counts of cancelled and non-cancelled flights")
 ```
 
+
 First, I plotted both groups together.
 
-```{r q1041-3-original-plot}
+```r
 ggplot(flights_eda, aes(x = scheduled_dep_time, color = cancelled)) +
   geom_freqpoly(binwidth = 1/4, linewidth = 0.8) +
   scale_x_continuous(breaks = seq(0, 24, by = 3)) +
@@ -299,9 +373,12 @@ ggplot(flights_eda, aes(x = scheduled_dep_time, color = cancelled)) +
        color = "Cancelled")
 ```
 
+*This plot is generated automatically when `README.Rmd` is rendered. See the included GitHub Actions workflow or run Knit in RStudio.*
+
+
 Next, I used separate graphs with the same scales.
 
-```{r q1041-3-facet-fixed, fig.height=5.7}
+```r
 ggplot(flights_eda, aes(x = scheduled_dep_time, color = cancelled)) +
   geom_freqpoly(binwidth = 1/4, linewidth = 0.8) +
   facet_wrap(~ cancelled, ncol = 1, scales = "fixed") +
@@ -311,9 +388,12 @@ ggplot(flights_eda, aes(x = scheduled_dep_time, color = cancelled)) +
        color = "Cancelled")
 ```
 
+*This plot is generated automatically when `README.Rmd` is rendered. See the included GitHub Actions workflow or run Knit in RStudio.*
+
+
 Then, I let each graph use its own y-axis.
 
-```{r q1041-3-facet-free-y, fig.height=5.7}
+```r
 ggplot(flights_eda, aes(x = scheduled_dep_time, color = cancelled)) +
   geom_freqpoly(binwidth = 1/4, linewidth = 0.8) +
   facet_wrap(~ cancelled, ncol = 1, scales = "free_y") +
@@ -323,9 +403,12 @@ ggplot(flights_eda, aes(x = scheduled_dep_time, color = cancelled)) +
        color = "Cancelled")
 ```
 
+*This plot is generated automatically when `README.Rmd` is rendered. See the included GitHub Actions workflow or run Knit in RStudio.*
+
+
 Finally, I let both axes vary.
 
-```{r q1041-3-facet-free, fig.height=5.7}
+```r
 ggplot(flights_eda, aes(x = scheduled_dep_time, color = cancelled)) +
   geom_freqpoly(binwidth = 1/4, linewidth = 0.8) +
   facet_wrap(~ cancelled, ncol = 1, scales = "free") +
@@ -333,5 +416,8 @@ ggplot(flights_eda, aes(x = scheduled_dep_time, color = cancelled)) +
        x = "Scheduled departure hour", y = "Number of flights",
        color = "Cancelled")
 ```
+
+*This plot is generated automatically when `README.Rmd` is rendered. See the included GitHub Actions workflow or run Knit in RStudio.*
+
 
 **Answer:** There are many more non-cancelled flights than cancelled flights, which makes the cancelled-flight pattern difficult to see. With `scales = "fixed"`, both graphs use the same scales, while `scales = "free_y"` gives each graph its own y-axis. I think `free_y` works best because it makes both patterns easier to see while keeping the time axis the same. However, the heights cannot be directly compared since the y-axes are different.
