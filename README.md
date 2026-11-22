@@ -1,10 +1,9 @@
 ---
-title: "Exploratory Data Analysis with R — Milestone Deliverable"
-author: "Jacob Dudas"
-date: "November 13, 2026"
+title: "README"
 output:
-  github_document:
-    pandoc_args: ["--wrap=none"]
+github_document:
+pandoc_args: ["--wrap=none"]
+always_allow_html: true
 ---
 
 **Course:** DS 201 — Principles of Data Science  
