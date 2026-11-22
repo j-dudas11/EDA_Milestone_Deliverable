@@ -31,7 +31,7 @@ I compared the three measurements and checked for unusual values.
 I also zoomed in to get a better look at the main group of measurements.
 
 
-![Diamond dimensions zoomed in](README_files/figure-gfm/q1033-1-zoomed-distributions.png)
+![Diamond dimensions zoomed in](README_figure-gfm/q1033-1-zoomed-distributions.png)
 
 
 **Answer:** Based on the histograms, `x` and `y` have very similar measurements, while `z` is generally smaller. This makes sense because `x` and `y` represent the length and width, while `z` measures the depth of a diamond. I also found some measurements of zero and a few unusually large values, which likely indicate errors in the data.
